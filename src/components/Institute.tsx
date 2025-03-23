@@ -1,25 +1,12 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import {
-  MaterialReactTable,
-  MRT_ColumnDef,
-  MRT_Row,
-} from "material-react-table";
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  TextField,
-  Grid,
-  Typography,
-  Box,
-} from "@mui/material";
+import { MaterialReactTable, MRT_ColumnDef } from "material-react-table";
+import { Button } from "@mui/material";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import InstituteForm from "./InstituteForm"
 
 export default function Institute() {
   interface Institute {
@@ -30,13 +17,6 @@ export default function Institute() {
     contact: string;
     website: string;
     established: string;
-  }
-
-  interface Course {
-    id: number;
-    name: string;
-    fees: number;
-    duration: number;
   }
 
   const navigate = useNavigate();
@@ -83,48 +63,6 @@ export default function Institute() {
   useEffect(() => {
     fetchInstitutes();
   }, [page, pageSize, search]);
-
-  const renderDetailPanel = useCallback(
-    ({ row }: { row: MRT_Row<Institute> }) => {
-      const institute = row.original as Institute;
-      const [courses, setCourses] = useState<Course[]>([]);
-      const [loadingCourses, setLoadingCourses] = useState<boolean>(true);
-      const [coursesError, setCoursesError] = useState<string | null>(null);
-
-      useEffect(() => {
-        axios
-          .get(`http://localhost:5000/api/courses/institutes/${institute.id}`)
-          .then((response) => {
-            setCourses(response.data);
-            setLoadingCourses(false);
-          })
-          .catch((err) => {
-            console.error("Error fetching courses:", err);
-            setCoursesError("Failed to load courses");
-            setLoadingCourses(false);
-          });
-      }, [institute.id]);
-
-      return (
-        <div>
-          {loadingCourses ? (
-            <p>Loading courses...</p>
-          ) : coursesError ? (
-            <p>{coursesError}</p>
-          ) : (
-            <ul>
-              {courses.map((course) => (
-                <li key={course.id}>
-                  {course.name} - ${course.fees} - {course.duration} months
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      );
-    },
-    []
-  );
 
   const columns: MRT_ColumnDef<Institute>[] = useMemo(
     () => [
@@ -262,111 +200,13 @@ export default function Institute() {
           globalFilter: search,
         }}
       />
-
-      <Dialog
+      <InstituteForm
         open={open}
         onClose={() => setOpen(false)}
-        maxWidth="md"
-        fullWidth
-      >
-        <DialogTitle>
-          <Typography variant="h5" fontWeight="bold" color="primary">
-            Add New Institute
-          </Typography>
-        </DialogTitle>
-        <DialogContent>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 2,
-              padding: "10px",
-              backgroundColor: "#f9f9f9",
-              borderRadius: "10px",
-            }}
-          >
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  label="Institute Name"
-                  name="name"
-                  fullWidth
-                  value={newInstitute.name}
-                  onChange={handleInputChange}
-                  variant="outlined"
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  label="Email"
-                  name="email"
-                  fullWidth
-                  value={newInstitute.email}
-                  onChange={handleInputChange}
-                  variant="outlined"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  label="Address"
-                  name="address"
-                  fullWidth
-                  value={newInstitute.address}
-                  onChange={handleInputChange}
-                  variant="outlined"
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  label="Contact"
-                  name="contact"
-                  fullWidth
-                  value={newInstitute.contact}
-                  onChange={handleInputChange}
-                  variant="outlined"
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  label="Website"
-                  name="website"
-                  fullWidth
-                  value={newInstitute.website}
-                  onChange={handleInputChange}
-                  variant="outlined"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  name="established"
-                  type="date"
-                  fullWidth
-                  value={newInstitute.established}
-                  onChange={handleInputChange}
-                  InputLabelProps={{ shrink: true }}
-                  variant="outlined"
-                />
-              </Grid>
-            </Grid>
-          </Box>
-        </DialogContent>
-        <DialogActions sx={{ padding: "20px" }}>
-          <Button
-            onClick={() => setOpen(false)}
-            variant="outlined"
-            color="secondary"
-          >
-            Cancel
-          </Button>
-          <Button
-            onClick={handleAddInstitute}
-            variant="contained"
-            color="primary"
-          >
-            Add Institute
-          </Button>
-        </DialogActions>
-      </Dialog>
+        institute={newInstitute}
+        onChange={handleInputChange}
+        onSubmit={handleAddInstitute}
+      />
     </div>
   );
 }
