@@ -8,7 +8,7 @@ const Dashboard = () => {
   const [totalFacultyToday, setTotalFacultyToday] = useState<number>(0);
 
   useEffect(() => {
-    fetchTotalStudentsToday();
+    // fetchTotalStudentsToday();
     fetchTotalStudents();
     fetchTotalFacultyToday();
   }, []);
@@ -22,19 +22,10 @@ const Dashboard = () => {
     }
   };
 
-  const fetchTotalStudentsToday = async () => {
-    try {
-      const response = await axios.get("http://localhost:5000/api/students/today");
-      setTotalStudentsToday(response.data.total);
-    } catch (error) {
-      console.error("Error fetching total students today:", error);
-    }
-  };
-
   const fetchTotalFacultyToday = async () => {
     try {
       const response = await axios.get("http://localhost:5000/api/faculties");
-      setTotalFacultyToday(response.data.total);
+      setTotalFacultyToday(response.data.length);
     } catch (error) {
       console.error("Error fetching total faculty today:", error);
     }
@@ -42,7 +33,7 @@ const Dashboard = () => {
 
   const chartData = [
     { category: "Total Students", value: totalStudents },
-    { category: "Students Today", value: totalStudentsToday },
+    { category: "Total Faculties", value: totalFacultyToday },
   ];
 
   return (
@@ -60,7 +51,7 @@ const Dashboard = () => {
           </div>
           <div className="bg-green-500 text-white p-6 rounded-lg shadow-md text-center">
             <h3 className="text-lg font-semibold">Total Students Present Today</h3>
-            <p className="text-2xl font-bold">{totalStudentsToday}</p>
+            <p className="text-2xl font-bold">{totalStudents}</p>
           </div>
         </section>
 

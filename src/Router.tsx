@@ -3,6 +3,7 @@ import Dashboard from "./components/Dashboard";
 import Institute from "./components/Institute";
 import Courses from "./components/Courses";
 import Attendance from "./components/Attendance";
+import Result from "./components/Result";
 
 export default function AppRouter() {
   return (
@@ -11,6 +12,7 @@ export default function AppRouter() {
       <Route path="/institutes" element={<Institute />} />
       <Route path="/courses/:instituteId" element={<Courses />} />
       <Route path="/attendance" element={<Attendance />} />
+      <Route path="/results" element={<Result />} />
     </Routes>
   );
 }

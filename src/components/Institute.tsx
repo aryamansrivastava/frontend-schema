@@ -64,6 +64,21 @@ export default function Institute() {
     fetchInstitutes();
   }, [page, pageSize, search]);
 
+  const handleEdit = (data: Institute) => {
+  };
+  
+  const handleDelete = async (id: number) => {
+    if (window.confirm("Are you sure you want to delete this item?")) {
+      try {
+        await axios.delete(`http://localhost:5000/api/items/${id}`);
+        alert("Item deleted successfully!");
+      } catch (error) {
+        console.error("Error deleting item:", error);
+        alert("Failed to delete item");
+      }
+    }
+  };
+  
   const columns: MRT_ColumnDef<Institute>[] = useMemo(
     () => [
       {
@@ -107,6 +122,28 @@ export default function Institute() {
         Cell: ({ cell }) => new Date(cell.getValue<string>()).toDateString(),
         size: 150,
       },
+      {
+        accessorKey: "actions",
+        header: "Actions",
+        Cell: ({ row }) => (
+          <div className="flex space-x-2">
+            <button
+              className="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600"
+              onClick={() => handleEdit(row.original)}
+            >
+              Edit
+            </button>
+            <button
+              className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600"
+              onClick={() => handleDelete(row.original.id)}
+            >
+              Delete
+            </button>
+          </div>
+        ),
+        size: 150,
+      }
+      
     ],
     []
   );
@@ -149,7 +186,7 @@ export default function Institute() {
   };
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-md">
+    <div className="">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-3xl font-bold text-gray-800">Institutes</h2>
         <Button
@@ -176,8 +213,14 @@ export default function Institute() {
         manualFiltering
         muiTableBodyRowProps={({ row }) => ({
           onClick: () => handleRowClick(row.original),
-          sx: { cursor: "pointer", "&:hover": { backgroundColor: "#f5f5f5" } },
+          sx: { cursor: "pointer", "&:hover": { backgroundColor: "white" } },
         })}
+        muiTableContainerProps={{
+          sx: { backgroundColor: "white" }, 
+        }}
+        muiPaginationProps={{
+          sx: { backgroundColor: "white", padding: "8px" }, 
+        }}
         onPaginationChange={(updater) => {
           setPage((prev) => {
             const newState =
