@@ -188,7 +188,7 @@ export default function Institute() {
 
   return (
     <div className="p-2 bg-gray-100 min-h-screen">
-      <div className="flex justify-between items-center mb-3 p-4 rounded-lg shadow-md">
+      <div className="flex justify-between items-center mb-3 p-4 rounded-lg bg-white">
         <h2 className="text-3xl font-bold text-gray-800">Institutes</h2>
         
         <div className="flex space-x-4">
@@ -202,10 +202,8 @@ export default function Institute() {
               textTransform: "none",
               padding: "8px 16px",
               borderRadius: "8px",
-              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
               "&:hover": {
                 background: "linear-gradient(135deg, #4338CA 0%, #5B21B6 100%)",
-                boxShadow: "0 6px 10px rgba(0, 0, 0, 0.15)",
               },
             }}
           >
@@ -215,18 +213,11 @@ export default function Institute() {
           <Button
             variant="contained"
             onClick={handleExportToExcel}
+            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
             sx={{
-              backgroundColor: "#22C55E",
-              color: "white",
-              fontWeight: "bold",
               textTransform: "none",
               padding: "8px 16px",
               borderRadius: "8px",
-              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-              "&:hover": {
-                backgroundColor: "#16A34A",
-                boxShadow: "0 6px 10px rgba(0, 0, 0, 0.15)",
-              },
             }}
           >
             Export Data
@@ -236,7 +227,7 @@ export default function Institute() {
   
       <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
 
-      <div className="bg-white p-4 rounded-lg shadow-md overflow-auto max-h-[calc(100vh-150px)]">
+      <div className="bg-white p-4 rounded-lg overflow-auto max-h-[calc(100vh-150px)]">
       <MaterialReactTable
         columns={columns}
         data={institutes}

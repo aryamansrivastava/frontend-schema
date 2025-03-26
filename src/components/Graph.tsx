@@ -97,7 +97,7 @@ const Graph: React.FC<GraphProps> = ({ chartData }) => {
     };
   }, [chartData]);
 
-  return <div id="studentChartDiv" className="h-80 w-full bg-white rounded-lg shadow-md p-4"></div>;
+  return <div id="studentChartDiv" className="h-80 w-full bg-white rounded-lg p-4"></div>;
 };
 
 export default Graph;
