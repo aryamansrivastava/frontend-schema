@@ -6,7 +6,8 @@ import { Button } from "@mui/material";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
-import InstituteForm from "./InstituteForm"
+import InstituteForm from "./InstituteForm";
+import { exportToExcel } from "../utils/exportToExcel";
 
 export default function Institute() {
   interface Institute {
@@ -29,6 +30,7 @@ export default function Institute() {
   const [pageSize, setPageSize] = useState(10);
   const [totalRows, setTotalRows] = useState(0);
   const [search, setSearch] = useState("");
+  const [selectedInstitute, setSelectedInstitute] = useState("");
 
   const [open, setOpen] = useState(false);
   const [newInstitute, setNewInstitute] = useState({
@@ -64,9 +66,6 @@ export default function Institute() {
     fetchInstitutes();
   }, [page, pageSize, search]);
 
-  const handleEdit = (data: Institute) => {
-  };
-  
   const handleDelete = async (id: number) => {
     if (window.confirm("Are you sure you want to delete this item?")) {
       try {
@@ -78,7 +77,7 @@ export default function Institute() {
       }
     }
   };
-  
+
   const columns: MRT_ColumnDef<Institute>[] = useMemo(
     () => [
       {
@@ -129,7 +128,7 @@ export default function Institute() {
           <div className="flex space-x-2">
             <button
               className="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600"
-              onClick={() => handleEdit(row.original)}
+              // onClick={() => handleEdit(row.original)}
             >
               Edit
             </button>
@@ -142,8 +141,7 @@ export default function Institute() {
           </div>
         ),
         size: 150,
-      }
-      
+      },
     ],
     []
   );
@@ -184,22 +182,61 @@ export default function Institute() {
       toast.error("Failed to add institute. Please try again.");
     }
   };
+  const handleExportToExcel = () => {
+    exportToExcel(institutes, columns);
+  };
 
   return (
-    <div className="">
-      <div className="flex justify-between items-center mb-6">
+    <div className="p-2 bg-gray-100 min-h-screen">
+      <div className="flex justify-between items-center mb-3 p-4 rounded-lg shadow-md">
         <h2 className="text-3xl font-bold text-gray-800">Institutes</h2>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => setOpen(true)}
-        >
-          Add Institute
-        </Button>
+        
+        <div className="flex space-x-4">
+          <Button
+            variant="contained"
+            onClick={() => setOpen(true)}
+            sx={{
+              background: "linear-gradient(135deg, #4F46E5 0%, #6D28D9 100%)",
+              color: "white",
+              fontWeight: "bold",
+              textTransform: "none",
+              padding: "8px 16px",
+              borderRadius: "8px",
+              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+              "&:hover": {
+                background: "linear-gradient(135deg, #4338CA 0%, #5B21B6 100%)",
+                boxShadow: "0 6px 10px rgba(0, 0, 0, 0.15)",
+              },
+            }}
+          >
+             Add Institute
+          </Button>
+  
+          <Button
+            variant="contained"
+            onClick={handleExportToExcel}
+            sx={{
+              backgroundColor: "#22C55E",
+              color: "white",
+              fontWeight: "bold",
+              textTransform: "none",
+              padding: "8px 16px",
+              borderRadius: "8px",
+              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+              "&:hover": {
+                backgroundColor: "#16A34A",
+                boxShadow: "0 6px 10px rgba(0, 0, 0, 0.15)",
+              },
+            }}
+          >
+            Export Data
+          </Button>
+        </div>
       </div>
-
+  
       <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
 
+      <div className="bg-white p-4 rounded-lg shadow-md overflow-auto max-h-[calc(100vh-150px)]">
       <MaterialReactTable
         columns={columns}
         data={institutes}
@@ -216,10 +253,10 @@ export default function Institute() {
           sx: { cursor: "pointer", "&:hover": { backgroundColor: "white" } },
         })}
         muiTableContainerProps={{
-          sx: { backgroundColor: "white" }, 
+          sx: { backgroundColor: "white", borderRadius: "8px", overflow: "hidden" },
         }}
         muiPaginationProps={{
-          sx: { backgroundColor: "white", padding: "8px" }, 
+          sx: { backgroundColor: "white", padding: "8px" },
         }}
         onPaginationChange={(updater) => {
           setPage((prev) => {
@@ -243,6 +280,8 @@ export default function Institute() {
           globalFilter: search,
         }}
       />
+       </div>
+  
       <InstituteForm
         open={open}
         onClose={() => setOpen(false)}

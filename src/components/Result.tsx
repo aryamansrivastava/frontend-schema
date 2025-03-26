@@ -21,10 +21,10 @@ const StudentResult = () => {
 
   const filteredResults = results.filter((result: any) =>
     (result.student?.name?.toLowerCase() || "").includes(search.toLowerCase()) ||
-    (result.exam?.name?.toLowerCase() || "").includes(search.toLowerCase())
+    (result.exam?.name?.toLowerCase() || "").includes(search.toLowerCase()) || 
+    (result.faculty?.name?.toLowerCase() || "").includes(search.toLowerCase())
   );
   
-
   return (
     <div>
       <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">Student Results</h2>
@@ -49,6 +49,7 @@ const StudentResult = () => {
               <th className="border border-gray-300 p-3">CGPA</th>
               <th className="border border-gray-300 p-3">Result Date</th>
               <th className="border border-gray-300 p-3">Status</th>
+              <th className="border border-gray-300 p-3">Faculty Name</th>
             </tr>
           </thead>
           <tbody>
@@ -77,10 +78,14 @@ const StudentResult = () => {
                   </td>
                   <td
                     className={`border border-gray-300 p-3 font-bold ${
-                      result.cgpa >= 2.5 ? "text-green-600" : "text-red-600"
+                      result.cgpa >= 3.6 ? "text-green-600" : "text-red-600"
                     }`}
                   >
-                    {result.cgpa >= 2.5 ? "Pass" : "Fail"}
+                    {result.cgpa >= 3.6 ? "Pass" : "Fail"}
+                  </td>
+
+                  <td className="border border-gray-300 p-3 text-gray-800">
+                    {result.faculties?.name || "N/A"}
                   </td>
                 </tr>
               ))
