@@ -239,7 +239,9 @@ export default function Institute() {
           sx: { cursor: "pointer", "&:hover": { backgroundColor: "white" } },
         })}
         muiTableContainerProps={{
-          sx: { backgroundColor: "white", borderRadius: "8px", overflow: "hidden" },
+          sx: { backgroundColor: "white", 
+            borderRadius: "8px", 
+            overflowX: "auto" },
         }}
         muiPaginationProps={{
           sx: { backgroundColor: "white", padding: "8px" },

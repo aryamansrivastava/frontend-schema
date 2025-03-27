@@ -22,9 +22,14 @@ const Graph: React.FC<GraphProps> = ({ chartData }) => {
       })
     );
 
+    const values = chartData.map((item) => item.value);
+    const minValue = Math.min(...values);
+    const maxValue = Math.max(...values);
+    const yMin = 0; 
+    const yMax = maxValue + (maxValue - minValue) * 0.2; 
+
     let xRenderer = am5xy.AxisRendererX.new(root, {
-      stroke: am5.color("#333"), 
-      minGridDistance: window.innerWidth < 640 ? 20 : 50,
+      minGridDistance: window.innerWidth < 640 ? 30 : 60,
     });
 
     let xAxis = chart.xAxes.push(
@@ -36,39 +41,27 @@ const Graph: React.FC<GraphProps> = ({ chartData }) => {
     );
 
     xRenderer.labels.template.setAll({
-      fill: am5.color("#333"),
-      fontSize: window.innerWidth < 640 ? 12 : 14,
+      fontSize: 14,
       textAlign: "center",
     });
 
-    xRenderer.grid.template.setAll({
-      stroke: am5.color("#ddd"), 
-      strokeOpacity: 0.5,
-    });
-
-    let yRenderer = am5xy.AxisRendererY.new(root, {
-      stroke: am5.color("#333"),
-    });
-
+    let yRenderer = am5xy.AxisRendererY.new(root, {});
     let yAxis = chart.yAxes.push(
       am5xy.ValueAxis.new(root, {
         renderer: yRenderer,
+        min: yMin,
+        max: yMax,
+        strictMinMax: true, 
+        extraMax: 0.1, 
       })
     );
 
     yRenderer.labels.template.setAll({
-      fill: am5.color("#333"),
-      fontSize: window.innerWidth < 640 ? 12 : 14,
-    });
-
-    yRenderer.grid.template.setAll({
-      stroke: am5.color("#ddd"),
-      strokeOpacity: 0.5,
+      fontSize: 14,
     });
 
     let series = chart.series.push(
       am5xy.ColumnSeries.new(root, {
-        name: "Students",
         xAxis: xAxis,
         yAxis: yAxis,
         valueYField: "value",

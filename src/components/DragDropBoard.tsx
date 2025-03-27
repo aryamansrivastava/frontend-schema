@@ -36,7 +36,7 @@ const DragDropBoard = () => {
   };
 
   return (
-    <div className="w-full max-w-4xl p-6 bg-white rounded-xl shadow-md flex flex-col">
+    <div className="w-full max-w-4xl p-6 bg-white rounded-xl shadow-md flex flex-col mt-12">
       <h2 className="text-2xl font-bold text-center mb-6 text-black">Drag & Drop Student Cards</h2>
 
       <div className="flex justify-between gap-6">
