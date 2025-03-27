@@ -31,7 +31,7 @@ export default function Courses() {
   }, [instituteId]);
 
   return (
-    <div className="bg-gray-100 p-6 rounded-lg shadow-md text-gray-900">
+    <div className="bg-gray-100 p-6 rounded-lg text-gray-900">
       <button
         className="mb-6 px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
         onClick={() => navigate(-1)}
@@ -50,7 +50,7 @@ export default function Courses() {
           {courses.map((course) => (
             <div
               key={course.id}
-              className="p-6 bg-white rounded-lg shadow-md text-center transform transition duration-300 hover:scale-105 hover:shadow-lg border border-gray-200"
+              className="p-6 bg-white rounded-lg text-center transform transition duration-300 hover:scale-105 border border-gray-200"
             >
               <h3 className="text-xl font-semibold text-blue-600">{course.name}</h3>
               <p className="text-gray-700 mt-2">

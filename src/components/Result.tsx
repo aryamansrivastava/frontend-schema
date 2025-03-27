@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { FiSearch } from "react-icons/fi"
+import { FiSearch } from "react-icons/fi";
+import { useDrag, useDrop, DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 const StudentResult = () => {
   const [results, setResults] = useState([]);
@@ -19,26 +21,34 @@ const StudentResult = () => {
     }
   };
 
-  const filteredResults = results.filter((result: any) =>
-    (result.student?.name?.toLowerCase() || "").includes(search.toLowerCase()) ||
-    (result.exam?.name?.toLowerCase() || "").includes(search.toLowerCase()) || 
-    (result.faculty?.name?.toLowerCase() || "").includes(search.toLowerCase())
+  const filteredResults = results.filter(
+    (result: any) =>
+      (result.student?.name?.toLowerCase() || "").includes(
+        search.toLowerCase()
+      ) ||
+      (result.exam?.name?.toLowerCase() || "").includes(search.toLowerCase()) ||
+      (result.faculty?.name?.toLowerCase() || "").includes(search.toLowerCase())
   );
-  
+
   return (
     <div>
-      <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">Student Results</h2>
+      <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">
+        Student Results
+      </h2>
       <div className="bg-white p-4 rounded-lg shadow-lg border border-gray-300 overflow-x-auto">
-      <div className="relative max-w-xs mb-3 float-right">
-  <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={20} />
-  <input
-    type="text"
-    placeholder="Search"
-    value={search}
-    onChange={(e) => setSearch(e.target.value)}
-    className="p-2 pl-10 w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-900"
-  />
-</div>
+        <div className="relative max-w-xs mb-3 float-right">
+          <FiSearch
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+            size={20}
+          />
+          <input
+            type="text"
+            placeholder="Search"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="p-2 pl-10 w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-900"
+          />
+        </div>
 
         <table className="w-full border-collapse min-w-[600px] border border-gray-200">
           <thead>

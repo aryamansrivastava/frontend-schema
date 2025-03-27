@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { FiMenu, FiX, FiHome, FiBook, FiCheckSquare, FiBarChart2 } from "react-icons/fi";
+import { FiMenu, FiX, FiHome, FiBook, FiCheckSquare, FiBarChart2, FiChevronDown } from "react-icons/fi";
 
 export default function Sidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -10,6 +10,7 @@ export default function Sidebar() {
     { name: "Institute", path: "/institutes", icon: <FiBook size={24} /> },
     { name: "Attendance", path: "/attendance", icon: <FiCheckSquare size={24} /> },
     { name: "Results", path: "/results", icon: <FiBarChart2 size={24} /> },
+    { name: "Drag and Drop", path: "/drag-drop", icon: <FiChevronDown size={24} /> },
   ];
 
   return (

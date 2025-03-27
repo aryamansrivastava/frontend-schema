@@ -195,16 +195,11 @@ export default function Institute() {
           <Button
             variant="contained"
             onClick={() => setOpen(true)}
+            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
             sx={{
-              background: "linear-gradient(135deg, #4F46E5 0%, #6D28D9 100%)",
-              color: "white",
-              fontWeight: "bold",
               textTransform: "none",
               padding: "8px 16px",
               borderRadius: "8px",
-              "&:hover": {
-                background: "linear-gradient(135deg, #4338CA 0%, #5B21B6 100%)",
-              },
             }}
           >
              Add Institute
