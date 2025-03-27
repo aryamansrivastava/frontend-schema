@@ -13,9 +13,9 @@ export default function AppRouter() {
     <Routes>
       <Route path="/" element={<Dashboard />} />
       <Route path="/institutes" element={<Institute />} />
-      <Route path="/courses/:instituteId" element={<Courses />} />
+      <Route path="/courses/institutes/:instituteId" element={<Courses />} />
       <Route path="/attendance" element={<Attendance />} />
-      <Route path="/results" element={<Result />} />
+      <Route path="/results" element={<Result />} /> 
       <Route
         path="/drag-drop"
         element={

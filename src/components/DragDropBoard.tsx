@@ -1,5 +1,4 @@
 import { useState } from "react";
-import DraggableStudent from "./DraggableStudent";
 import DropZone from "./DropZone";
 
 const initialStudents = [
@@ -13,8 +12,27 @@ const DragDropBoard = () => {
   const [droppedStudents, setDroppedStudents] = useState<any[]>([]);
 
   const handleDrop = (student: any) => {
+    if (!student || !student.id) return;
+
     setDroppedStudents((prev) => [...prev, student]);
     setStudents((prev) => prev.filter((s) => s.id !== student.id));
+  };
+
+  const handleReturn = (student: any) => {
+    if (!student || !student.id) return;
+
+    setStudents((prev) => [...prev, student]);
+    setDroppedStudents((prev) => prev.filter((s) => s.id !== student.id));
+  };
+
+  const handleReorder = (list: any[], setList: any, dragIndex: number, hoverIndex: number) => {
+    if (dragIndex < 0 || hoverIndex < 0 || dragIndex >= list.length || hoverIndex >= list.length) return;
+
+    const updatedList = [...list];
+    const [draggedStudent] = updatedList.splice(dragIndex, 1);
+    updatedList.splice(hoverIndex, 0, draggedStudent);
+
+    setList(updatedList);
   };
 
   return (
@@ -22,20 +40,21 @@ const DragDropBoard = () => {
       <h2 className="text-2xl font-bold text-center mb-6 text-black">Drag & Drop Student Cards</h2>
 
       <div className="flex justify-between gap-6">
-        <div className="w-1/2 bg-gray-200 p-4 rounded-lg shadow-md">
-          <h3 className="font-bold mb-3 text-lg text-black">Students</h3>
-          <div className="space-y-3 text-black">
-            {students.length > 0 ? (
-              students.map((student) => (
-                <DraggableStudent key={student.id} student={student} />
-              ))
-            ) : (
-              <p className="text-gray-500 text-sm">No students left</p>
-            )}
-          </div>
-        </div>
+        <DropZone
+          title="Students"
+          students={students}
+          onDrop={handleReturn} 
+          onReorder={(dragIndex, hoverIndex) => handleReorder(students, setStudents, dragIndex, hoverIndex)}
+          acceptType="DROPPED_STUDENT"
+        />
 
-        <DropZone onDrop={handleDrop} droppedStudents={droppedStudents} />
+        <DropZone
+          title="Dropped Students"
+          students={droppedStudents}
+          onDrop={handleDrop} 
+          onReorder={(dragIndex, hoverIndex) => handleReorder(droppedStudents, setDroppedStudents, dragIndex, hoverIndex)}
+          acceptType="STUDENT"
+        />
       </div>
     </div>
   );

@@ -1,10 +1,28 @@
 import React from "react";
 import { useDrop } from "react-dnd";
+import DraggableStudent from "./DraggableStudent";
 
-const DropZone = ({ onDrop, droppedStudents }: { onDrop: (item: any) => void; droppedStudents: any[] }) => {
+const DropZone = ({
+  title,
+  students = [],
+  onDrop,
+  onReorder,
+  acceptType,
+}: {
+  title: string;
+  students: any[];
+  onDrop: (student: any, newIndex: number) => void;
+  onReorder: (dragIndex: number, hoverIndex: number) => void;
+  acceptType: string;
+}) => {
   const [{ isOver }, drop] = useDrop(() => ({
-    accept: "STUDENT",
-    drop: (item: any) => onDrop(item),
+    accept: acceptType,
+    drop: (item: any) => {
+      if (students) {
+        const newIndex = students.length; 
+        onDrop(item, newIndex);
+      }
+    },
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
     }),
@@ -16,17 +34,22 @@ const DropZone = ({ onDrop, droppedStudents }: { onDrop: (item: any) => void; dr
   return (
     <div
       ref={dropRef}
-      className={`w-1/2 p-4 rounded-lg shadow-md min-h-[200px] transition-all ${
+      className={`text-black w-1/2 p-4 rounded-lg shadow-md min-h-[200px] transition-all ${
         isOver ? "bg-blue-100 border-2 border-blue-500" : "bg-gray-300"
       }`}
     >
-      <h3 className="font-bold mb-3 text-lg text-black">Dropped Students</h3>
-      {droppedStudents.length > 0 ? (
-        droppedStudents.map((student) => (
-          <div key={student.id} className="p-3 bg-white shadow-md rounded-lg border mb-2 text-black">
-            <p className="font-semibold">{student.name}</p>
-            <p className="text-sm text-gray-600">Marks: {student.marks}</p>
-          </div>
+      <h3 className="font-bold mb-3 text-lg text-black">{title}</h3>
+      {students.length > 0 ? (
+        students.map((student, index) => (
+          student && (
+            <DraggableStudent
+              key={student.id}
+              student={student}
+              index={index}
+              onReorder={onReorder}
+              fromDropped={acceptType === "STUDENT"}
+            />
+          )
         ))
       ) : (
         <p className="text-gray-500 text-sm">Drop students here</p>

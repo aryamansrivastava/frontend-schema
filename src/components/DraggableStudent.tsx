@@ -1,17 +1,37 @@
 import React from "react";
-import { useDrag } from "react-dnd";
+import { useDrag, useDrop } from "react-dnd";
 
-const DraggableStudent = ({ student }: { student: any }) => {
+const DraggableStudent = ({
+  student,
+  index,
+  onReorder,
+  fromDropped,
+}: {
+  student: any;
+  index: number;
+  onReorder: (dragIndex: number, hoverIndex: number) => void;
+  fromDropped: boolean;
+}) => {
   const [{ isDragging }, drag] = useDrag(() => ({
-    type: "STUDENT",
-    item: student,
+    type: fromDropped ? "DROPPED_STUDENT" : "STUDENT",
+    item: { ...student, index }, 
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
   }));
 
+  const [, drop] = useDrop({
+    accept: fromDropped ? "DROPPED_STUDENT" : "STUDENT",
+    hover: (draggedItem: any) => {
+      if (draggedItem.index !== index) {
+        onReorder(draggedItem.index, index);
+        draggedItem.index = index;
+      }
+    },
+  });
+
   const ref = React.useRef<HTMLDivElement>(null);
-  drag(ref);
+  drag(drop(ref)); 
 
   return (
     <div
@@ -20,7 +40,7 @@ const DraggableStudent = ({ student }: { student: any }) => {
         isDragging ? "opacity-50" : "opacity-100"
       }`}
     >
-      <p className="font-semibold">{student.name}</p>
+      <p className="font-semibold">{index + 1}. {student.name}</p>
       <p className="text-sm text-gray-600">Marks: {student.marks}</p>
     </div>
   );

@@ -150,7 +150,7 @@ export default function Institute() {
   if (error) return <p>{error}</p>;
 
   const handleRowClick = (row: Institute) => {
-    navigate(`/courses/${row.id}`);
+    navigate(`/courses/institutes/${row.id}`);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
