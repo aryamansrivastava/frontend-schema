@@ -1,80 +1,225 @@
-.fc-toolbar {
+.calendar-container {
+  padding: 24px;
+  border-radius: 8px;
+  background-color: #ffffff;
+  box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.2), 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12);
+  margin-bottom: 24px;
+}
+
+.calendar-title {
+  margin-bottom: 18px !important;
+  color: #1f2937 !important;
+  font-size: 1.875rem !important;
+  font-weight: bold !important;
+  letter-spacing: 0.5px !important;
+  text-align: center !important;  
+  display: block;
+}
+
+.fc .fc-toolbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #f8f9fa; 
-  color: #333;
-  padding: 12px 16px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+.fc .fc-toolbar-title {
+  /* color: black !important; */
+  font-size: 1.5rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.5px !important;
+  text-transform: none !important;
+}
+
+.custom-button {
+  border-color: #3f51b5 !important;
+  color: white !important;
+  text-transform: uppercase !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.5px !important;
+  border-radius: 4px !important;
+  padding: 8px 20px !important;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, 
+              box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms !important;
+}
+
+.custom-button:hover {
+  background-color: #303f9f !important;
+}
+
+.custom-button:disabled {
+  background-color: rgba(63, 81, 181, 0.7) !important;
+  border-color: rgba(63, 81, 181, 0.7) !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.fc .fc-scrollgrid {
+  border: none !important;
   border-radius: 8px;
-  font-weight: bold;
-  text-transform: uppercase;
-  margin-bottom: 10px;
-}
-
-.fc-toolbar-title {
-  color: #333 !important;
-  font-size: 1.6rem;
-  font-weight: bold;
-  text-align: center;
-  flex-grow: 1;
-}
-
-.fc-prev-button, .fc-next-button, .fc-today-button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: bold;
-}
-
-.fc-prev-button:hover, .fc-next-button:hover, .fc-today-button:hover {
-  background-color: #0056b3;
-}
-
-.fc-daygrid-day {
-  background-color: #fff;
-  color: black;
-  border: 1px solid #ddd;
-  height: 80px;
-}
-
-.fc-day-header {
-  background-color: #f8f9fa;
-  color: #333;
-  font-weight: bold;
-  padding: 10px;
-  text-transform: uppercase;
-  border-bottom: 2px solid #ccc;
-  font-size: 1rem;
-}
-
-.fc-daygrid-day-number {
-  color: black !important;
-  font-weight: bold;
-  font-size: 1rem;
-  padding: 5px;
-}
-
-.custom-event {
-  display: inline-block;
-  padding: 6px 10px;
-  border-radius: 20px;
-  font-size: 0.9rem;
-  font-weight: bold;
-  text-align: center;
-  color: white;
-  white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 }
 
-.event-present {
-  background-color: #0d6efd !important;
+.fc .fc-scrollgrid-section > td {
+  border: 1px solid #e0e0e0 !important;
 }
 
-.event-absent {
-  background-color: #dc3545 !important;
+.fc .fc-col-header-cell {
+  background-color: #3f51b5 !important;
+  padding: 12px 0 !important;
+}
+
+.fc .fc-col-header-cell-cushion {
+  color: white !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+  text-transform: uppercase !important;
+  font-size: 0.875rem !important;
+  letter-spacing: 0.5px !important;
+  padding: 8px !important;
+}
+
+.fc .fc-daygrid-day {
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+}
+
+.fc .fc-daygrid-day:hover {
+  background-color: #f5f5f5 !important;
+}
+
+.fc .fc-daygrid-day-frame {
+  padding: 8px !important;
+  min-height: 100px !important;
+}
+
+.fc .fc-daygrid-day-top {
+  justify-content: center !important;
+  padding-bottom: 5px !important;
+}
+
+.fc .fc-daygrid-day-number {
+  color: #616161 !important;
+  font-weight: 500 !important;
+  font-size: 0.875rem !important;
+  text-decoration: none !important;
+  width: 24px !important;
+  height: 24px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 50% !important;
+}
+
+.fc .fc-day-today .fc-daygrid-day-number {
+  background-color: #3f51b5 !important;
+  color: white !important;
+}
+
+.fc .fc-today-button {
+  color: black !important;
+  background-color: transparent !important; 
+  box-shadow: none !important;
+}
+
+.fc .fc-today-button:hover {
+  color: #333 !important;
+  background-color: #f5f5f5 !important; 
+}
+
+.material-event {
+  width: 100%;
+  padding: 2px;
+}
+
+.attendance-dialog .MuiPaper-root {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.fc .fc-button {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 8px !important;
+}
+
+.fc .fc-button .fc-icon {
+  font-size: 1.5rem !important;
+  color: #333 !important; 
+}
+
+.dialog-title {
+  background-color: #3f51b5;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px !important;
+}
+
+.dialog-title h6 {
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.close-button {
+  color: white !important;
+}
+
+.attendance-summary {
+  display: flex;
+  justify-content: space-between;
+  background-color: #f5f5f5;
+  padding: 16px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+
+.summary-text {
+  font-weight: 500 !important;
+}
+
+.student-list {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.student-list-item {
+  border-bottom: 1px solid #f0f0f0;
+  padding: 12px 16px !important;
+}
+
+.student-list-item:last-child {
+  border-bottom: none;
+}
+
+.avatar-present {
+  background-color: #4caf50 !important;
+  color: white !important;
+}
+
+.avatar-absent {
+  background-color: #f44336 !important;
+  color: white !important;
+}
+
+@media (max-width: 768px) {
+  .fc .fc-toolbar {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .fc .fc-toolbar-title {
+    font-size: 1.25rem !important;
+  }
+
+  .attendance-summary {
+    flex-direction: column;
+    gap: 8px;
+  }
 }

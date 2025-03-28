@@ -84,10 +84,11 @@ export default function CourseDetails() {
         Back
       </Button>
 
-      <div className="bg-white p-6 rounded-lg shadow-lg mt-6">
+      <div className="bg-white p-6 rounded-lg mt-6">
+        <div className="flex justify-between items-center mb-4">
         <p className="text-lg font-semibold text-black">Total Students: {students.length}</p>
         <p className="text-lg font-semibold text-black">Total Faculty: {faculty.length}</p>
-
+        </div>
         <Tabs
           value={activeTab}
           onChange={(_, newValue) => setActiveTab(newValue)}
@@ -99,12 +100,19 @@ export default function CourseDetails() {
 
         {activeTab === 0 ? (
           <MaterialReactTable
+          enableTableHead
+          muiTableHeadCellProps={{
+            sx: { backgroundColor: '#f5f5f5', fontWeight: 'bold', color: '#333' },
+          }}
             columns={studentColumns}
             data={students}
             enablePagination
             enableSorting
             enableGlobalFilter
             enableFilters
+            muiTableContainerProps={{
+              sx: { boxShadow: 'none', outline: 'none', backgroundColor: 'transparent' },
+            }}
           />
         ) : (
           <MaterialReactTable

@@ -1,9 +1,25 @@
 import { BrowserRouter as Router } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
 import AppRouter from "./Router";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+
 
 export default function App() {
+  
+const theme = createTheme({
+  components: {
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          boxShadow: "none",
+          outline: '1px solid #e5dfdd',
+        },
+      },
+    },
+  },
+});
   return (
+    <ThemeProvider theme={theme}>
     <Router>
       <div className="flex min-h-screen bg-gray-100 overflow-hidden">
         <Sidebar />
@@ -12,5 +28,6 @@ export default function App() {
         </main>
       </div>
     </Router>
+    </ThemeProvider>
   );
 }

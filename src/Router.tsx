@@ -10,13 +10,14 @@ import DragDropBoard from "./components/DragDropBoard";
 import CourseDetails from "./components/CourseDetails";
 
 export default function AppRouter() {
+  
   return (
     <Routes>
       <Route path="/" element={<Dashboard />} />
       <Route path="/institutes" element={<Institute />} />
       <Route path="/courses/institutes/:instituteId" element={<Courses />} />
       <Route path="/courses/:courseId/details" element={<CourseDetails />} />
-      <Route path="/attendance" element={<Attendance />} />
+      <Route path="/attendance" element={<Attendance instituteId={11} />} />
       <Route path="/results" element={<Result />} /> 
       <Route
         path="/drag-drop"
