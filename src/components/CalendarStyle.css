@@ -16,6 +16,10 @@
   display: block;
 }
 
+.fc-daygrid-event .fc-event-title {
+  white-space: pre-line;
+}
+
 .fc .fc-toolbar {
   display: flex;
   align-items: center;
@@ -28,7 +32,6 @@
 }
 
 .fc .fc-toolbar-title {
-  /* color: black !important; */
   font-size: 1.5rem !important;
   font-weight: 500 !important;
   letter-spacing: 0.5px !important;
@@ -198,16 +201,6 @@
   border-bottom: none;
 }
 
-.avatar-present {
-  background-color: #4caf50 !important;
-  color: white !important;
-}
-
-.avatar-absent {
-  background-color: #f44336 !important;
-  color: white !important;
-}
-
 @media (max-width: 768px) {
   .fc .fc-toolbar {
     flex-direction: column;
@@ -222,4 +215,18 @@
     flex-direction: column;
     gap: 8px;
   }
+}
+
+.fc-daygrid-event {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.present-text {
+  color: green;
+}
+
+.absent-text {
+  color: red;
 }
