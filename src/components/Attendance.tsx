@@ -7,9 +7,6 @@ import {Dialog,DialogTitle,DialogContent,DialogActions,Button,Paper,Typography,L
 } from "@mui/material";
 import {
   Close as CloseIcon,
-  Groups as GroupsIcon,
-  HowToReg as PresentIcon,
-  PersonOff as AbsentIcon,
 } from "@mui/icons-material";
 import "./CalendarStyle.css";
 
@@ -281,19 +278,6 @@ export default function StudentAttendanceCalendar({ instituteId }: Props) {
         marginBottom: "15px",
       }}
     >
-      {/* <Chip
-        icon={<GroupsIcon />}
-        label={`Total: ${studentsOnSelectedDate.length}`}
-        sx={{ fontWeight: "bold", backgroundColor: "#e3f2fd" }}
-      /> */}
-      {/* <Typography sx={{ fontWeight: "bold", color: "green" }}>
-        Present:{" "}
-        {studentsOnSelectedDate.filter((s) => s.status === "Present").length}
-      </Typography>
-      <Typography sx={{ fontWeight: "bold", color: "red" }}>
-        Absent:{" "}
-        {studentsOnSelectedDate.filter((s) => s.status === "Absent").length}
-      </Typography> */}
     </Box>
 
     <List sx={{ maxHeight: "300px", overflowY: "auto" }}>
