@@ -182,11 +182,20 @@ export default function StudentAttendanceCalendar({ instituteId }: Props) {
   };
 
   return (
-    <Paper elevation={3} className="calendar-container">
+    <Paper 
+      elevation={3}
+      sx={{ 
+        height: '100%', 
+        display: 'flex', 
+        flexDirection: 'column',
+        overflow: 'hidden',
+        p: 2,
+        maxHeight: '100vh'
+      }}
+    >
       <div
         className="flex"
         style={{
-          display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
         }}
@@ -214,11 +223,13 @@ export default function StudentAttendanceCalendar({ instituteId }: Props) {
         </FormControl>
       </div>
 
+      <div style={{ flexGrow: 1, overflow: 'hidden' }}>
       <FullCalendar
+      
         plugins={[dayGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"
         events={events}
-        height="auto"
+        height="100%"
         dateClick={handleDateClick}
         datesSet={(info) => {
           const newMonth = info.start.getMonth() + 1;
@@ -230,7 +241,10 @@ export default function StudentAttendanceCalendar({ instituteId }: Props) {
           const eventText = arg.event.title.split("\n");
 
           return (
-            <div style={{ textAlign: "center", fontSize: "13px" }}>
+            <div style={{ 
+              textAlign: "center", 
+              fontSize: "10px",
+            }}>
               {eventText.map((text, index) => (
                 <div
                   key={index}
@@ -249,6 +263,7 @@ export default function StudentAttendanceCalendar({ instituteId }: Props) {
           );
         }}
       />
+      </div>
 
       <Dialog
         open={openDialog}

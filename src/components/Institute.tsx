@@ -244,7 +244,7 @@ export default function Institute() {
             overflowX: "auto" },
         }}
         muiPaginationProps={{
-          sx: { backgroundColor: "white", padding: "8px" },
+          sx: { backgroundColor: "white", padding: "8px" , position: "sticky", bottom: 0, zIndex: 10},
         }}
         onPaginationChange={(updater) => {
           setPage((prev) => {
