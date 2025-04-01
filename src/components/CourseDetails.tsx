@@ -1,7 +1,20 @@
 import { useState, useEffect, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Button, Tabs, Tab } from "@mui/material";
+import {
+  Button,
+  Tabs,
+  Tab,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  List,
+  ListItem,
+  ListItemText,
+  IconButton,
+  Paper,
+} from "@mui/material";
+import { Close as CloseIcon } from "@mui/icons-material";
 import { MaterialReactTable, MRT_ColumnDef } from "material-react-table";
 
 export default function CourseDetails() {
@@ -29,6 +42,10 @@ export default function CourseDetails() {
   const [students, setStudents] = useState<Student[]>([]);
   const [faculty, setFaculty] = useState<Faculty[]>([]);
   const [activeTab, setActiveTab] = useState<0 | 1>(0);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedRowData, setSelectedRowData] = useState<
+    Student | Faculty | null
+  >(null);
 
   useEffect(() => {
     fetchStudents();
@@ -37,7 +54,9 @@ export default function CourseDetails() {
 
   const fetchStudents = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/courses/${courseId}/students`);
+      const response = await axios.get(
+        `http://localhost:5000/api/courses/${courseId}/students`
+      );
       setStudents(response.data);
     } catch (error) {
       console.error("Error fetching students:", error);
@@ -46,7 +65,9 @@ export default function CourseDetails() {
 
   const fetchFaculty = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/courses/${courseId}/faculties`);
+      const response = await axios.get(
+        `http://localhost:5000/api/courses/${courseId}/faculties`
+      );
       setFaculty(response.data);
     } catch (error) {
       console.error("Error fetching faculty:", error);
@@ -55,28 +76,31 @@ export default function CourseDetails() {
 
   const studentColumns: MRT_ColumnDef<Student>[] = useMemo(
     () => [
-      { accessorKey: "id", header: "ID", size: 100 },
-      { accessorKey: "name", header: "Name", size: 200 },
-      { accessorKey: "email", header: "Email", size: 250 },
-      { accessorKey: "semester", header: "Semester", size: 150 },
-      { accessorKey: "cgpa", header: "CGPA", size: 100 },
+      { accessorKey: "name", header: "Name" },
+      { accessorKey: "email", header: "Email" },
+      { accessorKey: "semester", header: "Semester" },
+      { accessorKey: "cgpa", header: "CGPA" },
     ],
     []
   );
 
   const facultyColumns: MRT_ColumnDef<Faculty>[] = useMemo(
     () => [
-      { accessorKey: "id", header: "ID", size: 80 },
-      { accessorKey: "name", header: "Name", size: 200 },
-      { accessorKey: "email", header: "Email", size: 250 },
-      { accessorKey: "qualification", header: "Qualification", size: 200 },
-      { accessorKey: "course", header: "Course", size: 200 },
-      { accessorKey: "specialization", header: "Specialization", size: 200 },
-      { accessorKey: "experience", header: "Experience (Years)", size: 150 },
-      { accessorKey: "salary", header: "Salary ($)", size: 150 },
+      { accessorKey: "name", header: "Name" },
+      { accessorKey: "email", header: "Email" },
+      { accessorKey: "qualification", header: "Qualification" },
+      { accessorKey: "course", header: "Course" },
+      { accessorKey: "specialization", header: "Specialization" },
+      { accessorKey: "experience", header: "Experience (Years)" },
+      { accessorKey: "salary", header: "Salary ($)" },
     ],
     []
   );
+
+  const handleRowClick = (row: any) => {
+    setSelectedRowData(row.original);
+    setOpenDialog(true);
+  };
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
@@ -86,13 +110,19 @@ export default function CourseDetails() {
 
       <div className="bg-white p-6 rounded-lg mt-6">
         <div className="flex justify-between items-center mb-4">
-        <p className="text-lg font-semibold text-black">Total Students: {students.length}</p>
-        <p className="text-lg font-semibold text-black">Total Faculty: {faculty.length}</p>
+          {activeTab === 0 ? (
+            <p className="text-lg font-semibold text-black">
+              Total Students: {students.length}
+            </p>
+          ) : (
+            <p className="text-lg font-semibold text-black">
+              Total Faculty: {faculty.length}
+            </p>
+          )}
         </div>
         <Tabs
           value={activeTab}
           onChange={(_, newValue) => setActiveTab(newValue)}
-          className="mb-4"
         >
           <Tab label="Students" />
           <Tab label="Faculty" />
@@ -100,31 +130,65 @@ export default function CourseDetails() {
 
         {activeTab === 0 ? (
           <MaterialReactTable
-          enableTableHead
-          muiTableHeadCellProps={{
-            sx: { backgroundColor: '#f5f5f5', fontWeight: 'bold', color: '#333' },
-          }}
             columns={studentColumns}
             data={students}
-            enablePagination
-            enableSorting
-            enableGlobalFilter
-            enableFilters
-            muiTableContainerProps={{
-              sx: { boxShadow: 'none', outline: 'none', backgroundColor: 'transparent' },
-            }}
+            muiTableBodyRowProps={({ row }) => ({
+              onClick: () => handleRowClick(row),
+              style: { cursor: "pointer" },
+            })}
           />
         ) : (
           <MaterialReactTable
             columns={facultyColumns}
             data={faculty}
-            enablePagination
-            enableSorting
-            enableGlobalFilter
-            enableFilters
+            muiTableBodyRowProps={({ row }) => ({
+              onClick: () => handleRowClick(row),
+              style: { cursor: "pointer" },
+            })}
           />
         )}
       </div>
+
+      <Dialog
+        open={openDialog}
+        onClose={() => setOpenDialog(false)}
+        fullWidth
+        maxWidth="xs"
+      >
+        <DialogTitle>
+          Details
+          <IconButton
+            aria-label="close"
+            onClick={() => setOpenDialog(false)}
+            sx={{ position: "absolute", right: 8, top: 8 }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent sx={{ maxHeight: "400px", overflowY: "auto" }}>
+          {selectedRowData && (
+            <Paper elevation={3} sx={{ padding: 2 }}>
+              <List>
+                {Object.entries(selectedRowData)
+                  .filter(
+                    ([key]) =>
+                      key !== "id" &&
+                      key !== "course_id" &&
+                      key !== "institute_id"
+                  )
+                  .map(([key, value]) => (
+                    <ListItem key={key} divider>
+                      <ListItemText
+                        primary={key.toLowerCase()}
+                        secondary={value}
+                      />
+                    </ListItem>
+                  ))}
+              </List>
+            </Paper>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

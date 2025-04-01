@@ -54,9 +54,23 @@ const Dashboard = ({ initialInstituteId }: { initialInstituteId?: number }) => {
 
   const fetchInstitutes = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/institutes");
-      const data = response.data?.data || [];
-      setInstitutes(data);
+      let allInstitutes: Institute[] = [];
+      let page = 1;
+      let totalPages = 1; 
+  
+      while (page <= totalPages) {
+        const response = await axios.get("http://localhost:5000/api/institutes", {
+          params: { page, limit: 100 } 
+        });
+  
+        const institutesData = response.data.data || [];
+        allInstitutes = allInstitutes.concat(institutesData);
+  
+        totalPages = response.data.totalPages;
+        page++; 
+      }
+  
+      setInstitutes(allInstitutes); 
     } catch (error) {
       console.error("Error fetching institutes:", error);
     }
@@ -155,7 +169,7 @@ const Dashboard = ({ initialInstituteId }: { initialInstituteId?: number }) => {
           {error && <p className="text-red-500 mt-2 text-sm">{error}</p>}
           {instituteId ? (
             <div className="mt-2 text-sm text-blue-600">
-              Showing data for Institute ID: {instituteId}
+              Showing data for {instituteName}
             </div>
           ) : (
             <div className="mt-2 text-sm text-blue-600">

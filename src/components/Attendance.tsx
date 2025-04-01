@@ -3,11 +3,21 @@ import axios from "axios";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import {Dialog,DialogTitle,DialogContent,DialogActions,Button,Paper,Typography,List,ListItem,ListItemText,Chip,Box,IconButton,FormControl,InputLabel,MenuItem,Select,
-} from "@mui/material";
 import {
-  Close as CloseIcon,
-} from "@mui/icons-material";
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  Paper,
+  Typography,
+  List,
+  ListItem,
+  ListItemText,
+  IconButton,
+  FormControl,
+  MenuItem,
+  Select,
+} from "@mui/material";
+import { Close as CloseIcon } from "@mui/icons-material";
 import "./CalendarStyle.css";
 
 interface Institute {
@@ -42,8 +52,14 @@ export default function StudentAttendanceCalendar({ instituteId }: Props) {
     Attendance[]
   >([]);
   const [institutes, setInstitutes] = useState<Institute[]>([]);
-  const [selectedInstituteId, setSelectedInstituteId] = useState<number | null>(
-    instituteId
+  const [selectedInstituteId, setSelectedInstituteId] = useState<
+    number | null
+  >();
+  const [selectedMonth, setSelectedMonth] = useState<number>(
+    new Date().getMonth()
+  );
+  const [selectedYear, setSelectedYear] = useState<number>(
+    new Date().getFullYear()
   );
 
   useEffect(() => {
@@ -52,39 +68,44 @@ export default function StudentAttendanceCalendar({ instituteId }: Props) {
 
   useEffect(() => {
     if (selectedInstituteId) {
-      fetchAttendance(selectedInstituteId);
+      fetchAttendance(selectedInstituteId, selectedMonth, selectedYear);
     }
-  }, [selectedInstituteId]);
-
-  const currentDate = new Date();
-  const firstDayOfMonth = new Date(
-    currentDate.getFullYear(),
-    currentDate.getMonth(),
-    1
-  )
-    .toISOString()
-    .split("T")[0];
-  const lastDayOfMonth = new Date(
-    currentDate.getFullYear(),
-    currentDate.getMonth() + 1,
-    0
-  )
-    .toISOString()
-    .split("T")[0];
+  }, [selectedInstituteId, selectedMonth, selectedYear]);
 
   const fetchInstitutes = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/institutes");
-      setInstitutes(response.data.data || []);
+      let allInstitutes: Institute[] = [];
+      let page = 1;
+      let totalPages = 1; 
+  
+      while (page <= totalPages) {
+        const response = await axios.get("http://localhost:5000/api/institutes", {
+          params: { page, limit: 100 } 
+        });
+  
+        const institutesData = response.data.data || [];
+        allInstitutes = allInstitutes.concat(institutesData);
+  
+        totalPages = response.data.totalPages;
+        page++; 
+      }
+  
+      setInstitutes(allInstitutes); 
     } catch (error) {
       console.error("Error fetching institutes:", error);
     }
   };
 
-  const fetchAttendance = async (instituteId: number) => {
+  const fetchAttendance = async (
+    instituteId: number,
+    month: number,
+    year: number
+  ) => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/attendances/${instituteId}?startDate=${firstDayOfMonth}&endDate=${lastDayOfMonth}`
+        `http://localhost:5000/api/attendances/${instituteId}?month=${
+          month + 1
+        }&year=${year}`
       );
 
       const mappedAttendance: Attendance[] =
@@ -174,22 +195,16 @@ export default function StudentAttendanceCalendar({ instituteId }: Props) {
           Student Attendance
         </Typography>
 
-        <FormControl sx={{ width: 200, marginTop: "-5px" }} size="small">
-          <InputLabel
-            sx={{
-              color: "rgba(0, 0, 0, 0.7)",
-              fontWeight: "bold",
-              paddingBottom: "5px",
-              fontSize: "1.4rem",
-            }}
-          >
-            Select Institute
-          </InputLabel>
+        <FormControl sx={{ width: 200 }} size="small">
           <Select
             value={selectedInstituteId || ""}
             onChange={handleInstituteChange}
-            sx={{ marginTop: "13px" }}
+            aria-placeholder="Select Institute"
+            displayEmpty
           >
+            <MenuItem value="" disabled>
+              Select Institute
+            </MenuItem>
             {institutes.map((institute) => (
               <MenuItem key={institute.id} value={institute.id}>
                 {institute.name}
@@ -205,6 +220,12 @@ export default function StudentAttendanceCalendar({ instituteId }: Props) {
         events={events}
         height="auto"
         dateClick={handleDateClick}
+        datesSet={(info) => {
+          const newMonth = info.start.getMonth() + 1;
+          const newYear = info.start.getFullYear();
+          setSelectedMonth(newMonth);
+          setSelectedYear(newYear);
+        }}
         eventContent={(arg) => {
           const eventText = arg.event.title.split("\n");
 
@@ -229,82 +250,53 @@ export default function StudentAttendanceCalendar({ instituteId }: Props) {
         }}
       />
 
-<Dialog
-  open={openDialog}
-  onClose={handleCloseDialog}
-  fullWidth
-  maxWidth="sm"
-  sx={{
-    "& .MuiPaper-root": {
-      borderRadius: "12px",
-      padding: "10px",
-      boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
-    },
-  }}
->
-  <DialogTitle
-    sx={{
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-      backgroundColor: "#f5f5f5",
-      padding: "12px 20px",
-      fontWeight: "bold",
-      fontSize: "1.2rem",
-    }}
-  >
-    <Typography variant="h6" sx={{ fontWeight: "bold", color: "#333" }}>
-      {selectedDate &&
-        new Date(selectedDate).toLocaleDateString("en-US", {
-          weekday: "long",
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        })}
-    </Typography>
-    <IconButton onClick={handleCloseDialog} sx={{ color: "#555" }}>
-      <CloseIcon />
-    </IconButton>
-  </DialogTitle>
-
-  <DialogContent dividers sx={{ padding: "20px" }}>
-    <Box
-      className="attendance-summary"
-      sx={{
-        display: "flex",
-        gap: "10px",
-        flexWrap: "wrap",
-        justifyContent: "center",
-        marginBottom: "15px",
-      }}
-    >
-    </Box>
-
-    <List sx={{ maxHeight: "300px", overflowY: "auto" }}>
-      {studentsOnSelectedDate.map((student) => (
-        <ListItem key={student.id} divider sx={{ padding: "10px 15px" }}>
-          <ListItemText
-            primary={student.studentName}
-            sx={{ fontWeight: "500", fontSize: "1rem" }}
-          />
-          <Typography
-            sx={{
-              fontWeight: "bold",
-              color: student.status === "Present" ? "green" : "red",
-            }}
-          >
-            {student.status}
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        fullWidth
+        maxWidth="sm"
+      >
+        <DialogTitle
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            backgroundColor: "#f5f5f5",
+            padding: "12px 20px",
+          }}
+        >
+          <Typography variant="h6">
+            {selectedDate &&
+              new Date(selectedDate).toLocaleDateString("en-US", {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
           </Typography>
-        </ListItem>
-      ))}
-    </List>
-  </DialogContent>
+          <IconButton onClick={handleCloseDialog}>
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
 
-  <DialogActions sx={{ padding: "12px 20px", justifyContent: "center" }}>
-    
-  </DialogActions>
-</Dialog>
-
+        <DialogContent>
+          <List sx={{ maxHeight: "300px", overflowY: "auto" }}>
+            {studentsOnSelectedDate.map((student) => (
+              <ListItem key={student.id} divider>
+                <ListItemText primary={student.studentName} />
+                <Typography
+                  sx={{
+                    fontWeight: "bold",
+                    color: student.status === "Present" ? "green" : "red",
+                  }}
+                >
+                  {student.status}
+                </Typography>
+              </ListItem>
+            ))}
+          </List>
+        </DialogContent>
+      </Dialog>
     </Paper>
   );
 }
