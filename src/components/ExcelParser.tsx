@@ -44,11 +44,10 @@ export default function ExcelParser() {
 
   return (
     <Box className="p-6 bg-gray-100 min-h-screen">
-      <Typography variant="h5" className="mb-4 font-semibold text-gray-800">
-        📊 Excel Parser
+      <Typography variant="h5" className="mb-4 text-3xl font-bold text-gray-800">
+        Excel Parser
       </Typography>
 
-     
       <div className="flex items-center gap-2 border p-2 rounded-md shadow-md bg-white">
         <input
           type="file"
