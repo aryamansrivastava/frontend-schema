@@ -88,9 +88,14 @@
   color: white !important;
 }
 
-.fc .fc-today-button:hover {
+.fc .fc-today-button{
   color: #333 !important;
+}
+
+.fc .fc-today-button:hover {
+  color: black !important;
   background-color: #f5f5f5 !important; 
+  cursor: pointer;
 }
 
 .material-event {

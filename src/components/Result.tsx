@@ -74,9 +74,11 @@ const StudentResult = () => {
 
   return (
     <div className="h-full flex flex-col overflow-hidden">
-      <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center ">
+      <div className="flex justify-between items-center mb-3 p-4 rounded-lg bg-white">
+      <h2 className="text-3xl font-bold text-gray-800">
         Student Results
       </h2>
+      </div>
       <div className="flex flex-col bg-white p-4 rounded-lg shadow-lg border border-gray-300 flex-1 overflow-y-auto">
         <div className="relative max-w-[200px] mb-3">
           <FiSearch

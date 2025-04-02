@@ -174,7 +174,9 @@ export default function CourseDetails() {
                     ([key]) =>
                       key !== "id" &&
                       key !== "course_id" &&
-                      key !== "institute_id"
+                      key !== "institute_id" &&
+                      key !== "createdAt" &&
+                      key !== "updatedAt"
                   )
                   .map(([key, value]) => (
                     <ListItem key={key} divider>

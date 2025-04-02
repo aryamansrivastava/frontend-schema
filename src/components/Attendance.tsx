@@ -76,21 +76,24 @@ export default function StudentAttendanceCalendar({ instituteId }: Props) {
     try {
       let allInstitutes: Institute[] = [];
       let page = 1;
-      let totalPages = 1; 
-  
+      let totalPages = 1;
+
       while (page <= totalPages) {
-        const response = await axios.get("http://localhost:5000/api/institutes", {
-          params: { page, limit: 100 } 
-        });
-  
+        const response = await axios.get(
+          "http://localhost:5000/api/institutes",
+          {
+            params: { page, limit: 100 },
+          }
+        );
+
         const institutesData = response.data.data || [];
         allInstitutes = allInstitutes.concat(institutesData);
-  
+
         totalPages = response.data.totalPages;
-        page++; 
+        page++;
       }
-  
-      setInstitutes(allInstitutes); 
+
+      setInstitutes(allInstitutes);
     } catch (error) {
       console.error("Error fetching institutes:", error);
     }
@@ -182,15 +185,15 @@ export default function StudentAttendanceCalendar({ instituteId }: Props) {
   };
 
   return (
-    <Paper 
+    <Paper
       elevation={3}
-      sx={{ 
-        height: '100%', 
-        display: 'flex', 
-        flexDirection: 'column',
-        overflow: 'hidden',
+      sx={{
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        overflow: "hidden",
         p: 2,
-        maxHeight: '100vh'
+        maxHeight: "100vh",
       }}
     >
       <div
@@ -200,7 +203,10 @@ export default function StudentAttendanceCalendar({ instituteId }: Props) {
           alignItems: "center",
         }}
       >
-        <Typography variant="h5" className="calendar-title">
+        <Typography
+          variant="h5"
+          sx={{ fontSize: "1.875rem", fontWeight: "bold", color: "#1F2937" }}
+        >
           Student Attendance
         </Typography>
 
@@ -223,46 +229,47 @@ export default function StudentAttendanceCalendar({ instituteId }: Props) {
         </FormControl>
       </div>
 
-      <div style={{ flexGrow: 1, overflow: 'hidden' }}>
-      <FullCalendar
-      
-        plugins={[dayGridPlugin, interactionPlugin]}
-        initialView="dayGridMonth"
-        events={events}
-        height="100%"
-        dateClick={handleDateClick}
-        datesSet={(info) => {
-          const newMonth = info.start.getMonth() + 1;
-          const newYear = info.start.getFullYear();
-          setSelectedMonth(newMonth);
-          setSelectedYear(newYear);
-        }}
-        eventContent={(arg) => {
-          const eventText = arg.event.title.split("\n");
+      <div style={{ flexGrow: 1, overflow: "hidden" }}>
+        <FullCalendar
+          plugins={[dayGridPlugin, interactionPlugin]}
+          initialView="dayGridMonth"
+          events={events}
+          height="100%"
+          dateClick={handleDateClick}
+          datesSet={(info) => {
+            const newMonth = info.start.getMonth() + 1;
+            const newYear = info.start.getFullYear();
+            setSelectedMonth(newMonth);
+            setSelectedYear(newYear);
+          }}
+          eventContent={(arg) => {
+            const eventText = arg.event.title.split("\n");
 
-          return (
-            <div style={{ 
-              textAlign: "center", 
-              fontSize: "10px",
-            }}>
-              {eventText.map((text, index) => (
-                <div
-                  key={index}
-                  style={{
-                    color: text.includes("Present")
-                      ? "green"
-                      : text.includes("Absent")
-                      ? "red"
-                      : "black",
-                  }}
-                >
-                  {text}
-                </div>
-              ))}
-            </div>
-          );
-        }}
-      />
+            return (
+              <div
+                style={{
+                  textAlign: "center",
+                  fontSize: "10px",
+                }}
+              >
+                {eventText.map((text, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      color: text.includes("Present")
+                        ? "green"
+                        : text.includes("Absent")
+                        ? "red"
+                        : "black",
+                    }}
+                  >
+                    {text}
+                  </div>
+                ))}
+              </div>
+            );
+          }}
+        />
       </div>
 
       <Dialog
