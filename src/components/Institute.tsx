@@ -20,8 +20,6 @@ export default function Institute() {
     established: string;
   }
 
-  const navigate = useNavigate();
-
   const [institutes, setInstitutes] = useState<Institute[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -30,9 +28,9 @@ export default function Institute() {
   const [pageSize, setPageSize] = useState(10);
   const [totalRows, setTotalRows] = useState(0);
   const [search, setSearch] = useState("");
-  const [selectedInstitute, setSelectedInstitute] = useState("");
 
   const [open, setOpen] = useState(false);
+  const [editingInstitute, setEditingInstitute] = useState<Institute | null>(null);
   const [newInstitute, setNewInstitute] = useState({
     name: "",
     email: "",
@@ -42,6 +40,8 @@ export default function Institute() {
     established: "",
   });
 
+  const navigate = useNavigate();
+  
   const fetchInstitutes = async () => {
     setLoading(true);
     try {
@@ -66,16 +66,74 @@ export default function Institute() {
     fetchInstitutes();
   }, [page, pageSize, search]);
 
+  
+  const handleRowClick = (row: Institute) => {
+    navigate(`/courses/institutes/${row.id}`);
+  };
+
   const handleDelete = async (id: number) => {
     if (window.confirm("Are you sure you want to delete this item?")) {
       try {
-        await axios.delete(`http://localhost:5000/api/items/${id}`);
-        alert("Item deleted successfully!");
+        await axios.delete(`http://localhost:5000/api/institutes/${id}`);
+        toast.success("Institute deleted successfully!");
+        fetchInstitutes();
       } catch (error) {
         console.error("Error deleting item:", error);
-        alert("Failed to delete item");
+         toast.error("Failed to delete institute.");
       }
     }
+  };
+
+  const handleEdit = (institute: Institute) => {
+    setEditingInstitute(institute);
+    setOpen(true);
+  };
+
+  const handleSaveInstitute = async () => {
+    try {
+      if (editingInstitute) {
+        await axios.put(`http://localhost:5000/api/institutes/${editingInstitute.id}`, editingInstitute);
+        toast.success("Institute updated successfully!");
+      } else {
+        await axios.post("http://localhost:5000/api/institutes", newInstitute);
+        toast.success("Institute added successfully!");
+      }
+  
+      fetchInstitutes(); 
+      setOpen(false);
+      setEditingInstitute(null);
+      setNewInstitute({
+        name: "",
+        email: "",
+        address: "",
+        contact: "",
+        website: "",
+        established: "",
+      });
+  
+    } catch (error) {
+      toast.error("Failed to save institute. Please try again.");
+      console.error("Error saving institute:", error);
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    if (editingInstitute) {
+      setEditingInstitute((prev) => prev && { ...prev, [name]: value });
+    } else {
+      setNewInstitute((prev) => ({ ...prev, [name]: value }));
+    }
+  };
+
+  const handleCloseForm = () => {
+    setOpen(false);
+    setEditingInstitute(null);
+    setNewInstitute({ name: "", email: "", address: "", contact: "", website: "", established: "" });
+  };
+
+  const handleExportToExcel = () => {
+    exportToExcel(institutes, columns);
   };
 
   const columns: MRT_ColumnDef<Institute>[] = useMemo(
@@ -128,7 +186,7 @@ export default function Institute() {
           <div className="flex space-x-2">
             <button
               className="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600"
-              // onClick={() => handleEdit(row.original)}
+              onClick={() => handleEdit(row.original)}
             >
               Edit
             </button>
@@ -148,43 +206,6 @@ export default function Institute() {
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
-
-  const handleRowClick = (row: Institute) => {
-    navigate(`/courses/institutes/${row.id}`);
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewInstitute({ ...newInstitute, [e.target.name]: e.target.value });
-  };
-
-  const handleAddInstitute = async () => {
-    try {
-      const response = await axios.post(
-        "http://localhost:5000/api/institutes",
-        newInstitute
-      );
-      console.log("Institute added:", response.data);
-
-      fetchInstitutes();
-      setOpen(false);
-      setNewInstitute({
-        name: "",
-        email: "",
-        address: "",
-        contact: "",
-        website: "",
-        established: "",
-      });
-      toast.success("Institute added successfully!");
-    } catch (err) {
-      console.error("Error adding institute:", err);
-      setError("Failed to add institute");
-      toast.error("Failed to add institute. Please try again.");
-    }
-  };
-  const handleExportToExcel = () => {
-    exportToExcel(institutes, columns);
-  };
 
   return (
     <div className="p-2 bg-gray-100 min-h-screen">
@@ -235,7 +256,10 @@ export default function Institute() {
         manualPagination
         manualFiltering
         muiTableBodyRowProps={({ row }) => ({
-          onClick: () => handleRowClick(row.original),
+          onClick: (e) => {
+            if ((e.target as HTMLElement).closest("button")) return;
+            handleRowClick(row.original);
+          },
           sx: { cursor: "pointer", "&:hover": { backgroundColor: "white" } },
         })}
         muiTableContainerProps={{
@@ -269,13 +293,12 @@ export default function Institute() {
         }}
       />
        </div>
-  
-      <InstituteForm
+       <InstituteForm
         open={open}
-        onClose={() => setOpen(false)}
-        institute={newInstitute}
+        onClose={handleCloseForm}
+        institute={editingInstitute || newInstitute}
         onChange={handleInputChange}
-        onSubmit={handleAddInstitute}
+        onSubmit={handleSaveInstitute}
       />
     </div>
   );
