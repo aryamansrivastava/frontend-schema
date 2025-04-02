@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { MaterialReactTable, MRT_ColumnDef } from "material-react-table";
@@ -117,14 +117,14 @@ export default function Institute() {
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     if (editingInstitute) {
       setEditingInstitute((prev) => prev && { ...prev, [name]: value });
     } else {
       setNewInstitute((prev) => ({ ...prev, [name]: value }));
     }
-  };
+  }, []);
 
   const handleCloseForm = () => {
     setOpen(false);
@@ -299,6 +299,7 @@ export default function Institute() {
         institute={editingInstitute || newInstitute}
         onChange={handleInputChange}
         onSubmit={handleSaveInstitute}
+        isEditing={!!editingInstitute}
       />
     </div>
   );

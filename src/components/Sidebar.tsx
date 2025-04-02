@@ -8,6 +8,7 @@ import {
   FiCheckSquare,
   FiBarChart2,
   FiChevronDown,
+  FiFileText,
 } from "react-icons/fi";
 
 export default function Sidebar() {
@@ -28,6 +29,11 @@ export default function Sidebar() {
       name: "Drag and Drop",
       path: "/drag-drop",
       icon: <FiChevronDown size={24} />,
+    },
+    {
+      name: "Excel Parser",
+      path: "/excel-parser",
+      icon:<FiFileText size={24} />,
     },
   ];
 

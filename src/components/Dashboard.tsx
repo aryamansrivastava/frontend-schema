@@ -43,7 +43,6 @@ const Dashboard = ({ initialInstituteId }: { initialInstituteId?: number }) => {
   }, []);
 
   useEffect(() => {
-    console.log("useeffect ", instituteId);
     if (instituteId) {
       fetchData();
     } else {
@@ -138,11 +137,11 @@ const Dashboard = ({ initialInstituteId }: { initialInstituteId?: number }) => {
 
   return (
     <div className="dashboard flex h-full">
-      <main className="flex-1 p-6 bg-gray-100">
+      <main className="flex-1 p-2 bg-gray-100">
         <header className="bg-white p-4 rounded-md mb-4 border border-gray-200">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between">
             <div>
-              <h2 className="text-xl font-bold text-gray-800">Welcome</h2>
+              <h2 className="text-3xl font-bold text-gray-800">Welcome</h2>
               <p className="text-gray-600">
                 Today's Date: {new Date().toDateString()}
               </p>

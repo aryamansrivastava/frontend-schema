@@ -8,6 +8,7 @@ import Attendance from "./components/Attendance";
 import Result from "./components/Result";
 import DragDropBoard from "./components/DragDropBoard";
 import CourseDetails from "./components/CourseDetails";
+import ExcelParser from "./components/ExcelParser";
 
 export default function AppRouter() {
   return (
@@ -30,6 +31,7 @@ export default function AppRouter() {
           </div>
         }
       />
+      <Route path="/excel-parser" element={<ExcelParser />} />
     </Routes>
   );
 }
