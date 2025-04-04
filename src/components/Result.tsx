@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { FiSearch, FiArrowDown, FiArrowUp } from "react-icons/fi";
